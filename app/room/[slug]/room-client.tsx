@@ -7,8 +7,8 @@ import { BoardStage } from '@/components/board/BoardStage'
 type JoinState =
   | { status: 'checking' }
   | { status: 'needs_name' }
-  | { status: 'joined'; participantId: string }
   | { status: 'error'; message: string }
+  | { status: 'joined'; roomId: string; participantId: string }
 
 export function RoomClient({ slug }: { slug: string }) {
   const [state, setState] = useState<JoinState>({ status: 'checking' })
@@ -53,7 +53,11 @@ export function RoomClient({ slug }: { slug: string }) {
       return
     }
 
-    setState({ status: 'joined', participantId: data[0].out_participant_id })
+    setState({
+      status: 'joined',
+      roomId: data[0].out_room_id,
+      participantId: data[0].out_participant_id
+    })
   }
 
   if (state.status === 'checking') {
@@ -89,7 +93,7 @@ export function RoomClient({ slug }: { slug: string }) {
   }
 
   // state.status === 'joined'
-  return <BoardStage />
+  return <BoardStage roomId={state.roomId} participantId={state.participantId} />
 }
 
 function FullScreenMessage({ children }: { children: React.ReactNode }) {
