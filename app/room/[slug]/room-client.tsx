@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { BoardStage } from '@/components/board/BoardStage'
 
 type JoinState =
   | { status: 'checking' }
@@ -88,11 +89,7 @@ export function RoomClient({ slug }: { slug: string }) {
   }
 
   // state.status === 'joined'
-  return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="text-neutral-500">Joined as participant {state.participantId} — board goes here</p>
-    </main>
-  )
+  return <BoardStage />
 }
 
 function FullScreenMessage({ children }: { children: React.ReactNode }) {
