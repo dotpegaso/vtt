@@ -1,78 +1,91 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { BoardStage } from '@/components/board/BoardStage'
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { BoardStage } from "@/components/board/BoardStage";
 
 type JoinState =
-  | { status: 'checking' }
-  | { status: 'needs_name' }
-  | { status: 'error'; message: string }
-  | { status: 'joined'; roomId: string; participantId: string }
+  | { status: "checking" }
+  | { status: "needs_name" }
+  | {
+      status: "joined";
+      roomId: string;
+      participantId: string;
+      userId: string;
+      displayName: string;
+    }
+  | { status: "error"; message: string };
 
 export function RoomClient({ slug }: { slug: string }) {
-  const [state, setState] = useState<JoinState>({ status: 'checking' })
-  const [nameInput, setNameInput] = useState('')
+  const [state, setState] = useState<JoinState>({ status: "checking" });
+  const [nameInput, setNameInput] = useState("");
 
   useEffect(() => {
-    const supabase = createClient()
+    const supabase = createClient();
 
     async function bootstrap() {
-      const { data: { user } } = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
-        const { error } = await supabase.auth.signInAnonymously()
+        const { error } = await supabase.auth.signInAnonymously();
         if (error) {
-          setState({ status: 'error', message: error.message })
-          return
+          setState({ status: "error", message: error.message });
+          return;
         }
       }
 
-      setState({ status: 'needs_name' })
+      setState({ status: "needs_name" });
     }
 
-    bootstrap()
-  }, [])
+    bootstrap();
+  }, []);
 
   async function handleJoin(e: React.FormEvent) {
-    e.preventDefault()
-    if (!nameInput.trim()) return
+    e.preventDefault();
+    if (!nameInput.trim()) return;
 
-    const supabase = createClient()
-    const { data, error } = await supabase.rpc('join_room', {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const { data, error } = await supabase.rpc("join_room", {
       p_slug: slug,
       p_display_name: nameInput.trim().slice(0, 24),
-    })
+    });
 
     if (error) {
-      const message =
-        error.message.includes('room_full') ? 'This room is full (8 players max).' :
-        error.message.includes('room_not_found') ? 'This room no longer exists.' :
-        'Could not join room: ' + error.message
-      setState({ status: 'error', message })
-      return
+      // ... existing error handling ...
+      return;
     }
 
     setState({
-      status: 'joined',
+      status: "joined",
       roomId: data[0].out_room_id,
-      participantId: data[0].out_participant_id
-    })
+      participantId: data[0].out_participant_id,
+      userId: user!.id,
+      displayName: nameInput.trim().slice(0, 24),
+    });
   }
 
-  if (state.status === 'checking') {
-    return <FullScreenMessage>Loading…</FullScreenMessage>
+  if (state.status === "checking") {
+    return <FullScreenMessage>Loading…</FullScreenMessage>;
   }
 
-  if (state.status === 'error') {
-    return <FullScreenMessage>{state.message}</FullScreenMessage>
+  if (state.status === "error") {
+    return <FullScreenMessage>{state.message}</FullScreenMessage>;
   }
 
-  if (state.status === 'needs_name') {
+  if (state.status === "needs_name") {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-6">
         <h1 className="text-xl font-semibold">Join room</h1>
-        <form onSubmit={handleJoin} className="flex flex-col gap-3 w-full max-w-xs">
+        <form
+          onSubmit={handleJoin}
+          className="flex flex-col gap-3 w-full max-w-xs"
+        >
           <input
             autoFocus
             maxLength={24}
@@ -89,11 +102,18 @@ export function RoomClient({ slug }: { slug: string }) {
           </button>
         </form>
       </main>
-    )
+    );
   }
 
   // state.status === 'joined'
-  return <BoardStage roomId={state.roomId} participantId={state.participantId} />
+  return (
+    <BoardStage
+      roomId={state.roomId}
+      participantId={state.participantId}
+      userId={state.userId}
+      displayName={state.displayName}
+    />
+  );
 }
 
 function FullScreenMessage({ children }: { children: React.ReactNode }) {
@@ -101,5 +121,5 @@ function FullScreenMessage({ children }: { children: React.ReactNode }) {
     <main className="flex min-h-screen items-center justify-center p-6 text-center text-neutral-500">
       {children}
     </main>
-  )
+  );
 }

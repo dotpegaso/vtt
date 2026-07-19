@@ -8,18 +8,23 @@ import { ImageLayer } from "./ImageLayer";
 
 import { useStrokes } from '@/hooks/useStrokes'
 import { useImages } from '@/hooks/useImages'
+import { usePresence } from "@/hooks/usePresence";
+import { useRoom } from '@/hooks/useRoom'
 
 import type Konva from "konva";
 
 type BoardStageProps = {
   roomId: string
   participantId: string
+  userId: string
+  displayName: string
 }
+
 
 const MIN_SCALE = 0.2;
 const MAX_SCALE = 4;
 
-export function BoardStage({ roomId, participantId }: BoardStageProps) {
+export function BoardStage({ roomId, participantId, userId, displayName }: BoardStageProps) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -32,6 +37,10 @@ export function BoardStage({ roomId, participantId }: BoardStageProps) {
 
   const { strokes, addStroke, undoLast, clearMine } = useStrokes({ roomId, participantId })
   const { images, uploadImage } = useImages({ roomId })
+  const { onlineParticipants } = usePresence({ roomId, userId, displayName })
+  const { gmId } = useRoom(roomId)
+  console.log('[gm check] gmId:', gmId, 'userId:', userId, 'onlineParticipants:', onlineParticipants)
+
 
   useEffect(() => {
     function updateSize() {
@@ -128,29 +137,38 @@ export function BoardStage({ roomId, participantId }: BoardStageProps) {
     stageRef.current?.draggable(true);
   }
 
+  console.log({onlineParticipants})
+
   return (
     <>
+      <div style={{ position: 'fixed', top: 60, left: 12, zIndex: 10, padding: 8, fontSize: 12, background: 'gray' }}>
+        {onlineParticipants.map((p) => (
+          <div key={p.userId}>
+            {p.displayName} {p.userId === gmId ? '(GM)' : ''} {p.userId === userId ? '(you)' : ''}
+          </div>
+        ))}
+      </div>
       <button
         onClick={() => setMode((m) => (m === "select" ? "draw" : "select"))}
-        style={{ position: "fixed", top: 12, left: 12, zIndex: 10, padding: "8px 16px" }}
+        style={{ position: "fixed", top: 12, left: 12, zIndex: 10, padding: "8px 16px", background: 'gray' }}
       >
         Mode: {mode}
       </button>
       <button
         onClick={() => drawLayerRef.current?.undoLast()}
-        style={{ position: 'fixed', top: 12, left: 120, zIndex: 10, padding: '8px 16px' }}
+        style={{ position: 'fixed', top: 12, left: 140, zIndex: 10, padding: '8px 16px', background: 'gray' }}
       >
         Undo
       </button>
       <button
         onClick={() => drawLayerRef.current?.clearAll()}
-        style={{ position: 'fixed', top: 12, left: 200, zIndex: 10, padding: '8px 16px' }}
+        style={{ position: 'fixed', top: 12, left: 220, zIndex: 10, padding: '8px 16px', background: 'gray' }}
       >
         Clear
       </button>
       <button
         onClick={() => document.getElementById('image-upload')?.click()}
-        style={{ position: 'fixed', top: 12, left: 280, zIndex: 10, padding: '8px 16px' }}
+        style={{ position: 'fixed', top: 12, left: 300, zIndex: 10, padding: '8px 16px', background: 'gray' }}
       >
         Upload image
       </button>
