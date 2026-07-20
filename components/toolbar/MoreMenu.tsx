@@ -4,9 +4,9 @@ import { theme } from '@/lib/theme'
 
 type MoreMenuProps = {
   isOpen: boolean
-  onCloseAction: () => void
-  onOpenHistoryAction: () => void
-  onCloseRoomAction: () => void
+  onCloseAction: VoidFunction
+  onOpenHistoryAction: VoidFunction
+  onCloseRoomAction: VoidFunction
 }
 
 export function MoreMenu({ isOpen, onCloseAction, onOpenHistoryAction, onCloseRoomAction }: MoreMenuProps) {

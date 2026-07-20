@@ -15,16 +15,16 @@ export type RemoteStroke = LocalStroke & {
 }
 
 export type DrawLayerHandle = {
-  undoLast: () => void
-  clearAll: () => void
+  undoLast: VoidFunction
+  clearAll: VoidFunction
 }
 
 type DrawLayerProps = {
   active: boolean
   strokes: RemoteStroke[]
   onStrokeComplete: (stroke: LocalStroke) => void
-  onUndo: () => void
-  onClear: () => void
+  onUndo: VoidFunction
+  onClear: VoidFunction
 }
 
 export const DrawLayer = forwardRef<DrawLayerHandle, DrawLayerProps>(

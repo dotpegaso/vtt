@@ -4,8 +4,8 @@ import { theme } from '@/lib/theme'
 
 type DrawActionsProps = {
   visible: boolean
-  onUndoAction: () => void
-  onClearAction: () => void
+  onUndoAction: VoidFunction
+  onClearAction: VoidFunction
 }
 
 export function DrawActions({ visible, onUndoAction, onClearAction }: DrawActionsProps) {

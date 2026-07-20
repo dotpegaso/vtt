@@ -20,7 +20,7 @@ type ParticipantName = {
 type HistoryDrawerProps = {
   roomId: string
   isOpen: boolean
-  onCloseAction: () => void
+  onCloseAction: VoidFunction
 }
 
 export function HistoryDrawer({ roomId, isOpen, onCloseAction }: HistoryDrawerProps) {

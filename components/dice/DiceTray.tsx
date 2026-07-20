@@ -7,14 +7,14 @@ type DiceBoxInstance = {
   initialize: () => Promise<void>;
   roll: (notation: string) => Promise<unknown>;
   add: (notation: string) => Promise<unknown>;
-  clearDice: () => void;
+  clearDice: VoidFunction;
 };
 
 type DiceTrayProps = {
   userId: string;
   activeRoll: DiceRoll | null;
   isManuallyOpen: boolean;
-  onCloseAction?: () => void;
+  onCloseAction?: VoidFunction;
   onRollCompleteAction: (rollId: string) => void;
   onReadyChangeAction: (ready: boolean) => void;
 };

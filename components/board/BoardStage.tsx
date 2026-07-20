@@ -17,6 +17,8 @@ import { useImages } from "@/hooks/useImages";
 import { usePresence } from "@/hooks/usePresence";
 import { useRoom } from "@/hooks/useRoom";
 import { useDiceRoll } from "@/hooks/useDiceRoll";
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+
 import { createClient } from "@/lib/supabase/client";
 
 import type Konva from "konva";
@@ -65,6 +67,14 @@ export function BoardStage({
   } = useDiceRoll({ roomId });
 
   const isGm = gmId === userId;
+
+  useKeyboardShortcuts({
+    onDraw: () => setMode('draw'),
+    onSelect: () => setMode('select'),
+    onRollD20: () => startRoll([{ sides: 20, count: 1 }]),
+    onToggleHistory: () => setShowHistory((v) => !v),
+    diceDisabled: !diceReady || !!activeRoll,
+  })
 
   useEffect(() => {
     function updateSize() {
@@ -218,11 +228,10 @@ export function BoardStage({
         mode={mode}
         onModeChangeAction={setMode}
         diceOpen={diceOpen}
+        diceDisabled={!diceReady || !!activeRoll}
         onDiceToggleAction={() => setDiceOpen((v) => !v)}
         isGm={isGm}
-        onUploadClickAction={() =>
-          document.getElementById("image-upload")?.click()
-        }
+        onUploadClickAction={() => document.getElementById('image-upload')?.click()}
         onOpenHistoryAction={() => setShowHistory(true)}
         onCloseRoomAction={handleCloseRoom}
       />
