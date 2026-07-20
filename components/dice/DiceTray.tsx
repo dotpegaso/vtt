@@ -4,10 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { DiceRoll } from "@/hooks/useDiceRoll";
 
 type DiceBoxInstance = {
-  initialize: () => Promise<void>
-  roll: (notation: string) => Promise<unknown>
-  add: (notation: string) => Promise<unknown>
-}
+  initialize: () => Promise<void>;
+  roll: (notation: string) => Promise<unknown>;
+  add: (notation: string) => Promise<unknown>;
+};
 
 type DiceTrayProps = {
   userId: string;
@@ -47,10 +47,14 @@ export function DiceTray({
         const box = new DiceBox("#dice-box-container", {
           assetPath: "/assets/dice-box/",
           theme_colorset: "white",
+          theme_material: "plastic",
           sounds: false,
           framerate: 1 / 30,
-          shadows: false,
-          strength: 3,
+          strength: 2.6,
+          gravity_multiplier: 220,
+          theme_surface: "green-felt",
+          baseScale: 80,
+         	light_intensity: 0.8,
         });
 
         await box.initialize();
@@ -68,39 +72,47 @@ export function DiceTray({
   }, []);
 
   const buildSingleGroupNotation = useCallback(
-    (result: DiceRoll["results"] extends (infer U)[] | null ? U : never): string => {
-      return `${result.count}d${result.sides}@${result.values.join(",")}`
+    (
+      result: DiceRoll["results"] extends (infer U)[] | null ? U : never,
+    ): string => {
+      return `${result.count}d${result.sides}@${result.values.join(",")}`;
     },
-    []
-  )
+    [],
+  );
 
   useEffect(() => {
-    if (!activeRoll || !isReady || !diceBoxRef.current) return
-    if (!activeRoll.results || activeRoll.results.length === 0) return
+    if (!activeRoll || !isReady || !diceBoxRef.current) return;
+    if (!activeRoll.results || activeRoll.results.length === 0) return;
 
-    const roll = activeRoll
+    const roll = activeRoll;
     const box = diceBoxRef.current as DiceBoxInstance & {
-      add: (notation: string) => Promise<unknown>
-    }
+      add: (notation: string) => Promise<unknown>;
+    };
 
     async function rollAllGroups() {
-      const [first, ...rest] = roll.results!
+      const [first, ...rest] = roll.results!;
 
-      await box.roll(buildSingleGroupNotation(first))
+      await box.roll(buildSingleGroupNotation(first));
 
       for (const group of rest) {
-        await box.add(buildSingleGroupNotation(group))
+        await box.add(buildSingleGroupNotation(group));
       }
 
       if (roll.rollerId === userId) {
-        onRollCompleteAction(roll.id)
+        onRollCompleteAction(roll.id);
       }
     }
 
     rollAllGroups().catch((err) => {
-      console.error("[dice] roll sequence failed:", err)
-    })
-  }, [activeRoll, isReady, userId, onRollCompleteAction, buildSingleGroupNotation])
+      console.error("[dice] roll sequence failed:", err);
+    });
+  }, [
+    activeRoll,
+    isReady,
+    userId,
+    onRollCompleteAction,
+    buildSingleGroupNotation,
+  ]);
 
   return (
     <div

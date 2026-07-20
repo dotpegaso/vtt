@@ -1,2 +1,1 @@
-   select * from storage.buckets;
-
+select * from cron.job;

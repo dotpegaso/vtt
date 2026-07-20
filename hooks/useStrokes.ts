@@ -69,6 +69,9 @@ export function useStrokes({ roomId, participantId }: UseStrokesProps) {
     };
   }, [roomId]);
 
+  // path: vtt/hooks/useStrokes.ts
+  // replace addStroke():
+
   async function addStroke(stroke: LocalStroke) {
     setStrokes((prev) => [
       ...prev,
@@ -77,20 +80,25 @@ export function useStrokes({ roomId, participantId }: UseStrokesProps) {
         participant_id: participantId,
         created_at: new Date().toISOString(),
       },
-    ]);
+    ])
 
-    const supabase = createClient();
-    const { error } = await supabase.from("strokes").insert({
-      id: stroke.id,
-      room_id: roomId,
-      participant_id: participantId,
-      points: stroke.points,
-      color: "#000000",
-      width: 3,
-    });
+    const supabase = createClient()
+    const { error } = await supabase.rpc('insert_stroke', {
+      p_room_id: roomId,
+      p_id: stroke.id,
+      p_participant_id: participantId,
+      p_points: stroke.points,
+      p_color: '#000000',
+      p_width: 3,
+    })
 
     if (error) {
-      console.error("Failed to save stroke:", error);
+      if (error.message.includes('stroke_limit_reached')) {
+        console.error('Stroke limit reached (2000 max) — roll back the optimistic add')
+        setStrokes((prev) => prev.filter((s) => s.id !== stroke.id))
+      } else {
+        console.error('Failed to save stroke:', error)
+      }
     }
   }
 

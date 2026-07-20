@@ -30,7 +30,6 @@ export function useImages({ roomId }: UseImagesProps) {
     let mounted = true;
 
     async function setup() {
-      // Load initial images
       const { data } = await supabase
         .from("images")
         .select("*")
@@ -45,9 +44,8 @@ export function useImages({ roomId }: UseImagesProps) {
 
     setup();
 
-    // Separate effect for realtime subscription
     const channel = supabase
-      .channel(`images:${roomId}:${Date.now()}`) // unique channel name each time
+      .channel(`images:${roomId}:${Date.now()}`)
       .on(
         "postgres_changes",
         {
@@ -149,15 +147,23 @@ export function useImages({ roomId }: UseImagesProps) {
         const scaledWidth = Math.min(width, maxWidth);
         const scaledHeight = scaledWidth / aspectRatio;
 
-        await supabase.from("images").insert({
-          room_id: roomId,
-          storage_path: storagePath,
-          x: x - scaledWidth / 2,
-          y: y - scaledHeight / 2,
-          width: scaledWidth,
-          height: scaledHeight,
-          uploaded_by: user.id,
+        const { error: insertError } = await supabase.rpc("insert_image", {
+          p_room_id: roomId,
+          p_storage_path: storagePath,
+          p_x: x - scaledWidth / 2,
+          p_y: y - scaledHeight / 2,
+          p_width: scaledWidth,
+          p_height: scaledHeight,
+          p_uploaded_by: user.id,
         });
+
+        if (insertError) {
+          if (insertError.message.includes("image_limit_reached")) {
+            console.error("Image limit reached (25 max)");
+          } else {
+            console.error("Failed to save image:", insertError);
+          }
+        }
       };
       img.onerror = () => {
         console.error("Failed to load image dimensions");
