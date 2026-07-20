@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { theme } from '@/lib/theme'
 
 type HistoryRoll = {
   id: string
@@ -74,55 +75,81 @@ export function HistoryDrawer({ roomId, isOpen, onCloseAction }: HistoryDrawerPr
   if (!isOpen) return null
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: 280,
-        background: 'white',
-        borderLeft: '1px solid #ddd',
-        zIndex: 250,
-        display: 'flex',
-        flexDirection: 'column',
-        boxShadow: '-2px 0 8px rgba(0,0,0,0.1)',
-      }}
-    >
+    <>
+      <div
+        onClick={onCloseAction}
+        style={{ position: 'fixed', inset: 0, zIndex: 240, background: 'rgba(0,0,0,0.3)' }}
+      />
       <div
         style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 280,
+          background: theme.container,
+          zIndex: 250,
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 12,
-          borderBottom: '1px solid #eee',
+          flexDirection: 'column',
         }}
       >
-        <strong>Roll History</strong>
-        <button onClick={onCloseAction}>Close</button>
-      </div>
-
-      <div style={{ flex: 1, overflowY: 'auto', padding: 12 }}>
-        {rolls.length === 0 && (
-          <p style={{ color: '#999', fontSize: 14 }}>No rolls yet.</p>
-        )}
-        {rolls.map((roll) => (
-          <div
-            key={roll.id}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 14,
+            borderBottom: `1px solid ${theme.divider}`,
+          }}
+        >
+          <strong style={{ color: theme.text, fontSize: 14, fontWeight: 500 }}>
+            Roll history
+          </strong>
+          <button
+            onClick={onCloseAction}
+            aria-label="Close history"
             style={{
-              padding: '8px 0',
-              borderBottom: '1px solid #f0f0f0',
-              fontSize: 13,
+              width: 28,
+              height: 28,
+              borderRadius: 8,
+              background: theme.containerLight,
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <div style={{ fontWeight: 600 }}>{getRollerName(roll.roller_id)}</div>
-            <div>{formatRoll(roll)}</div>
-            <div style={{ color: '#999', fontSize: 11 }}>
-              {new Date(roll.created_at).toLocaleTimeString()}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={theme.text} strokeWidth="2">
+              <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: 14 }}>
+          {rolls.length === 0 && (
+            <p style={{ color: theme.divider, fontSize: 13 }}>No rolls yet.</p>
+          )}
+          {rolls.map((roll) => (
+            <div
+              key={roll.id}
+              style={{
+                padding: '10px 0',
+                borderBottom: `1px solid ${theme.divider}`,
+              }}
+            >
+              <div style={{ fontWeight: 500, fontSize: 13, color: theme.highlight }}>
+                {getRollerName(roll.roller_id)}
+              </div>
+              <div style={{ fontSize: 13, color: theme.text, marginTop: 2 }}>
+                {formatRoll(roll)}
+              </div>
+              <div style={{ color: theme.divider, fontSize: 11, marginTop: 2 }}>
+                {new Date(roll.created_at).toLocaleTimeString()}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

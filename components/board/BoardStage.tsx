@@ -6,16 +6,20 @@ import { Stage, Layer, Rect, Line } from "react-konva";
 import { DrawLayer, DrawLayerHandle } from "./DrawLayer";
 import { ImageLayer } from "./ImageLayer";
 import { DiceTray } from "../dice/DiceTray";
+import { DicePanel } from "../dice/DicePanel";
+import { HistoryDrawer } from "../dice/HistoryDrawer";
+import { PlayerList } from "../room/PlayerList";
+import { DrawActions } from "./DrawActions";
+import { BottomToolbar } from "../toolbar/BottomToolbar";
 
 import { useStrokes } from "@/hooks/useStrokes";
 import { useImages } from "@/hooks/useImages";
 import { usePresence } from "@/hooks/usePresence";
 import { useRoom } from "@/hooks/useRoom";
 import { useDiceRoll } from "@/hooks/useDiceRoll";
+import { createClient } from "@/lib/supabase/client";
 
 import type Konva from "konva";
-import { DiceSelector } from "../dice/DiceSelector";
-import { HistoryDrawer } from "../dice/HistoryDrawer";
 
 type BoardStageProps = {
   roomId: string;
@@ -37,7 +41,7 @@ export function BoardStage({
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [mode, setMode] = useState<"select" | "draw">("select");
-  const [showDiceTray, setShowDiceTray] = useState(false);
+  const [diceOpen, setDiceOpen] = useState(false);
   const [diceReady, setDiceReady] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -59,6 +63,8 @@ export function BoardStage({
     startRoll,
     completeRoll,
   } = useDiceRoll({ roomId });
+
+  const isGm = gmId === userId;
 
   useEffect(() => {
     function updateSize() {
@@ -165,47 +171,60 @@ export function BoardStage({
     stageRef.current?.draggable(true);
   }
 
+  async function handleCloseRoom() {
+    const supabase = createClient();
+    await supabase.from("rooms").update({ closed: true }).eq("id", roomId);
+  }
+
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          top: 12,
-          left: 12,
-          zIndex: 10,
-          padding: 8,
-          fontSize: 12,
-          background: "gray",
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
-        }}
-      >
-        {onlineParticipants.map((p) => (
-          <div key={p.userId}>
-            {p.displayName} {p.userId === gmId ? "(GM)" : ""}{" "}
-            {p.userId === userId ? "(you)" : ""}
-          </div>
-        ))}
-        <button
-          onClick={() => setMode((m) => (m === "select" ? "draw" : "select"))}
-        >
-          Mode: {mode}
-        </button>
-        <button onClick={() => drawLayerRef.current?.undoLast()}>Undo</button>
-        <button onClick={() => drawLayerRef.current?.clearAll()}>Clear</button>
-        <button
-          onClick={() => document.getElementById("image-upload")?.click()}
-        >
-          Upload image
-        </button>
-        <button onClick={() => setShowHistory(true)}>history</button>
-        {diceError && <div>{diceError}</div>}
-      </div>
+      <PlayerList
+        onlineParticipants={onlineParticipants}
+        gmId={gmId}
+        userId={userId}
+      />
 
-      <DiceSelector
+      <DrawActions
+        visible={mode === "draw"}
+        onUndoAction={undoLast}
+        onClearAction={clearMine}
+      />
+
+      {diceError && (
+        <div
+          style={{
+            position: "fixed",
+            top: 60,
+            left: 16,
+            zIndex: 20,
+            fontSize: 12,
+            color: "#e24b4a",
+          }}
+        >
+          {diceError}
+        </div>
+      )}
+
+      <DicePanel
+        isOpen={diceOpen}
         disabled={!diceReady || !!activeRoll}
-        onRollAction={startRoll}
+        onRollAction={(config) => {
+          startRoll(config);
+          setDiceOpen(false);
+        }}
+      />
+
+      <BottomToolbar
+        mode={mode}
+        onModeChangeAction={setMode}
+        diceOpen={diceOpen}
+        onDiceToggleAction={() => setDiceOpen((v) => !v)}
+        isGm={isGm}
+        onUploadClickAction={() =>
+          document.getElementById("image-upload")?.click()
+        }
+        onOpenHistoryAction={() => setShowHistory(true)}
+        onCloseRoomAction={handleCloseRoom}
       />
 
       <HistoryDrawer
@@ -225,9 +244,6 @@ export function BoardStage({
         draggable={mode === "select"}
         onWheel={handleWheel}
         onDragEnd={(e) => {
-          // Guard needed: image drag-end events bubble up to the Stage too,
-          // but their e.target is the image, not the Stage — without this
-          // check, dropping an image would incorrectly re-position the board.
           if (e.target === e.target.getStage()) {
             setPos({ x: e.target.x(), y: e.target.y() });
           }
@@ -275,14 +291,15 @@ export function BoardStage({
           onClear={clearMine}
         />
       </Stage>
+
       <DiceTray
         userId={userId}
         activeRoll={activeRoll}
-        isManuallyOpen={showDiceTray}
-        onCloseAction={() => setShowDiceTray(false)}
+        isManuallyOpen={diceOpen}
         onRollCompleteAction={completeRoll}
         onReadyChangeAction={setDiceReady}
       />
+
       <input
         id="image-upload"
         type="file"

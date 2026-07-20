@@ -7,13 +7,14 @@ type DiceBoxInstance = {
   initialize: () => Promise<void>;
   roll: (notation: string) => Promise<unknown>;
   add: (notation: string) => Promise<unknown>;
+  clearDice: () => void;
 };
 
 type DiceTrayProps = {
   userId: string;
   activeRoll: DiceRoll | null;
   isManuallyOpen: boolean;
-  onCloseAction: () => void;
+  onCloseAction?: () => void;
   onRollCompleteAction: (rollId: string) => void;
   onReadyChangeAction: (ready: boolean) => void;
 };
@@ -22,15 +23,27 @@ export function DiceTray({
   userId,
   activeRoll,
   isManuallyOpen,
-  onCloseAction,
   onRollCompleteAction,
   onReadyChangeAction,
 }: DiceTrayProps) {
   const diceBoxRef = useRef<DiceBoxInstance | null>(null);
   const initializedRef = useRef(false);
+  const lastHandledRollId = useRef<string | null>(null);
+  const prevActiveRollRef = useRef<DiceRoll | null>(null);
   const [isReady, setIsReady] = useState(false);
 
   const isVisible = isManuallyOpen || !!activeRoll;
+
+  useEffect(() => {
+    // Detect the moment activeRoll goes from "something" to null — i.e. the
+    // roll just finished and the tray is about to auto-hide. Clear the 3D
+    // scene now so a stale settled-dice frame doesn't silently reappear the
+    // next time the tray becomes visible again.
+    if (prevActiveRollRef.current && !activeRoll && diceBoxRef.current) {
+      diceBoxRef.current.clearDice();
+    }
+    prevActiveRollRef.current = activeRoll;
+  }, [activeRoll]);
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -54,7 +67,7 @@ export function DiceTray({
           gravity_multiplier: 220,
           theme_surface: "green-felt",
           baseScale: 80,
-         	light_intensity: 0.8,
+          light_intensity: 0.8,
         });
 
         await box.initialize();
@@ -84,6 +97,12 @@ export function DiceTray({
     if (!activeRoll || !isReady || !diceBoxRef.current) return;
     if (!activeRoll.results || activeRoll.results.length === 0) return;
 
+    // Guard: never replay a roll we've already animated, even if this effect
+    // re-fires due to an unrelated prop/callback identity change (e.g. the
+    // parent re-rendering while the dice panel is toggled open/closed).
+    if (lastHandledRollId.current === activeRoll.id) return;
+    lastHandledRollId.current = activeRoll.id;
+
     const roll = activeRoll;
     const box = diceBoxRef.current as DiceBoxInstance & {
       add: (notation: string) => Promise<unknown>;
@@ -91,13 +110,10 @@ export function DiceTray({
 
     async function rollAllGroups() {
       const [first, ...rest] = roll.results!;
-
       await box.roll(buildSingleGroupNotation(first));
-
       for (const group of rest) {
         await box.add(buildSingleGroupNotation(group));
       }
-
       if (roll.rollerId === userId) {
         onRollCompleteAction(roll.id);
       }
@@ -127,12 +143,6 @@ export function DiceTray({
         pointerEvents: isVisible ? "auto" : "none",
       }}
     >
-      <div style={{ position: "absolute", top: 12, right: 12, zIndex: 101 }}>
-        <button style={{ background: "black" }} onClick={onCloseAction}>
-          Close
-        </button>
-      </div>
-
       <div id="dice-box-container" style={{ flex: 1 }} />
     </div>
   );

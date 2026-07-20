@@ -1,16 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export type DiceConfig = { sides: number; count: number }
-
 export type DiceRollResult = {
   sides: number
   count: number
   values: number[]
 }
-
 export type DiceRoll = {
   id: string
   roomId: string
@@ -66,7 +64,6 @@ export function useDiceRoll({ roomId }: UseDiceRollProps) {
         },
         (payload) => {
           if (!mounted) return
-
           if (payload.eventType === 'INSERT') {
             const row = payload.new
             setActiveRoll({
@@ -80,8 +77,6 @@ export function useDiceRoll({ roomId }: UseDiceRollProps) {
           } else if (payload.eventType === 'UPDATE') {
             const row = payload.new
             if (row.status === 'done') {
-              // Small delay so the animation has a moment to finish visually
-              // on clients that started slightly later than others
               setTimeout(() => setActiveRoll(null), 2000)
             }
           }
@@ -95,27 +90,34 @@ export function useDiceRoll({ roomId }: UseDiceRollProps) {
     }
   }, [roomId])
 
-  async function startRoll(config: DiceConfig[]) {
-    setError(null)
-    const supabase = createClient()
-    const { error: rollError } = await supabase.rpc('start_roll', {
-      p_room_id: roomId,
-      p_config: config,
-    })
+  // Wrapped in useCallback so these keep a stable identity across renders —
+  // without this, any BoardStage re-render (e.g. toggling the dice panel)
+  // creates new function references, which caused DiceTray's roll-triggering
+  // effect to re-fire and replay stale rolls.
+  const startRoll = useCallback(
+    async (config: DiceConfig[]) => {
+      setError(null)
+      const supabase = createClient()
+      const { error: rollError } = await supabase.rpc('start_roll', {
+        p_room_id: roomId,
+        p_config: config,
+      })
 
-    if (rollError) {
-      if (rollError.message.includes('roll_in_progress')) {
-        setError('Someone is already rolling — please wait.')
-      } else {
-        setError('Could not start roll: ' + rollError.message)
+      if (rollError) {
+        if (rollError.message.includes('roll_in_progress')) {
+          setError('Someone is already rolling — please wait.')
+        } else {
+          setError('Could not start roll: ' + rollError.message)
+        }
       }
-    }
-  }
+    },
+    [roomId]
+  )
 
-  async function completeRoll(rollId: string) {
+  const completeRoll = useCallback(async (rollId: string) => {
     const supabase = createClient()
     await supabase.rpc('complete_roll', { p_roll_id: rollId })
-  }
+  }, [])
 
   return { activeRoll, error, startRoll, completeRoll }
 }
