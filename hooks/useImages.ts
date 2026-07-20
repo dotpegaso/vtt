@@ -180,6 +180,13 @@ export function useImages({ roomId }: UseImagesProps) {
     y: number,
     rotation: number,
   ) {
+    // Optimistic: reflect the new position locally immediately, don't wait
+    // for the Supabase round-trip — this is what keeps the image and its
+    // lock badge from visually snapping back to the old position after drag.
+    setImages((prev) =>
+      prev.map((img) => (img.id === imageId ? { ...img, x, y, rotation } : img))
+    );
+
     const supabase = createClient();
     await supabase.from("images").update({ x, y, rotation }).eq("id", imageId);
   }
@@ -189,15 +196,33 @@ export function useImages({ roomId }: UseImagesProps) {
     width: number,
     height: number,
   ) {
+    setImages((prev) =>
+      prev.map((img) => (img.id === imageId ? { ...img, width, height } : img))
+    );
+
     const supabase = createClient();
     await supabase.from("images").update({ width, height }).eq("id", imageId);
   }
 
+  async function toggleImageLock(imageId: string, locked: boolean) {
+    const supabase = createClient();
+    const { error } = await supabase.rpc("toggle_image_lock", {
+      p_image_id: imageId,
+      p_locked: locked,
+    });
+
+    if (error) {
+      console.error("Failed to toggle lock:", error);
+    }
+  }
+
+  // add it to the returned object:
   return {
     images,
     isLoading,
     uploadImage,
     updateImagePosition,
     updateImageSize,
+    toggleImageLock,
   };
 }

@@ -281,6 +281,7 @@ export function BoardStage({
           images={images}
           active={mode === "select"}
           roomId={roomId}
+          isGm={isGm}
         />
         <DrawLayer
           ref={drawLayerRef}
