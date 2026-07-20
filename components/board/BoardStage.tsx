@@ -14,6 +14,8 @@ import { useRoom } from "@/hooks/useRoom";
 import { useDiceRoll } from "@/hooks/useDiceRoll";
 
 import type Konva from "konva";
+import { DiceSelector } from "../dice/DiceSelector";
+import { HistoryDrawer } from "../dice/HistoryDrawer";
 
 type BoardStageProps = {
   roomId: string;
@@ -37,6 +39,7 @@ export function BoardStage({
   const [mode, setMode] = useState<"select" | "draw">("select");
   const [showDiceTray, setShowDiceTray] = useState(false);
   const [diceReady, setDiceReady] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const stageRef = useRef<Konva.Stage>(null);
   const lastCenter = useRef<{ x: number; y: number } | null>(null);
@@ -196,19 +199,20 @@ export function BoardStage({
         >
           Upload image
         </button>
-        <button onClick={() => setShowDiceTray(true)}>Dice</button>
-        <button onClick={() => startRoll([{ sides: 20, count: 1 }])} disabled={!diceReady || !!activeRoll}>
-          Roll d20
-        </button>
-        <button onClick={() => startRoll([{ sides: 6, count: 2 }])} disabled={!diceReady || !!activeRoll}>
-          Roll 2d6
-        </button>
-        {diceError && (
-          <div>
-            {diceError}
-          </div>
-        )}
+        <button onClick={() => setShowHistory(true)}>history</button>
+        {diceError && <div>{diceError}</div>}
       </div>
+
+      <DiceSelector
+        disabled={!diceReady || !!activeRoll}
+        onRollAction={startRoll}
+      />
+
+      <HistoryDrawer
+        roomId={roomId}
+        isOpen={showHistory}
+        onCloseAction={() => setShowHistory(false)}
+      />
 
       <Stage
         ref={stageRef}

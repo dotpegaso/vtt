@@ -82,7 +82,7 @@ export function useDiceRoll({ roomId }: UseDiceRollProps) {
             if (row.status === 'done') {
               // Small delay so the animation has a moment to finish visually
               // on clients that started slightly later than others
-              setTimeout(() => setActiveRoll(null), 500)
+              setTimeout(() => setActiveRoll(null), 3000)
             }
           }
         }
