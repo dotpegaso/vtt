@@ -47,7 +47,7 @@ export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
           <button
             disabled={disabled}
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            style={{ width: 30, height: 30, borderRadius: 8, background: theme.containerLight, color: theme.text, border: 'none', fontSize: 15 }}
+            style={{ width: 30, height: 30, borderRadius: 8, background: theme.containerLight, color: theme.text, border: 'none', fontSize: 22, cursor: 'pointer',}}
           >
             −
           </button>
@@ -61,7 +61,7 @@ export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: 500,
             }}
           >
@@ -70,7 +70,7 @@ export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
           <button
             disabled={disabled}
             onClick={() => setCount((c) => c + 1)}
-            style={{ width: 30, height: 30, borderRadius: 8, background: theme.containerLight, color: theme.text, border: 'none', fontSize: 15 }}
+            style={{ width: 30, height: 30, borderRadius: 8, background: theme.containerLight, color: theme.text, border: 'none', fontSize: 22, cursor: 'pointer', }}
           >
             +
           </button>
@@ -93,7 +93,8 @@ export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
                     color: isSelected ? theme.container : theme.text,
                     fontWeight: isSelected ? 500 : 400,
                     border: 'none',
-                    fontSize: 10,
+                    fontSize: 12,
+                    cursor: 'pointer',
                   }}
                 >
                   d{sides}
@@ -114,6 +115,7 @@ export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
             padding: 8,
             fontSize: 13,
             fontWeight: 500,
+            cursor: 'pointer',
           }}
         >
           Roll

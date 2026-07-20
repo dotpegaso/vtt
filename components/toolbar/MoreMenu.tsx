@@ -17,19 +17,23 @@ export function MoreMenu({ isOpen, onCloseAction, onOpenHistoryAction, onCloseRo
       {/* Invisible backdrop to close the menu on outside tap */}
       <div
         onClick={onCloseAction}
-        style={{ position: 'fixed', inset: 0, zIndex: 160 }}
+        style={{ position: 'fixed', inset: 0, zIndex: 140 }}
       />
       <div
         style={{
           position: 'fixed',
           bottom: 76,
-          right: 16,
-          zIndex: 170,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 150,
           background: theme.container,
-          borderRadius: 10,
-          overflow: 'hidden',
-          minWidth: 160,
-          border: `1px solid ${theme.divider}`,
+          border: `1px solid ${theme.highlight}`,
+          borderRadius: 12,
+          padding: '12px 14px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+          minWidth: 220,
         }}
       >
         <button
@@ -46,6 +50,7 @@ export function MoreMenu({ isOpen, onCloseAction, onOpenHistoryAction, onCloseRo
             border: 'none',
             color: theme.text,
             fontSize: 13,
+            cursor: 'pointer',
           }}
         >
           Roll history
@@ -65,6 +70,7 @@ export function MoreMenu({ isOpen, onCloseAction, onOpenHistoryAction, onCloseRo
             border: 'none',
             color: theme.highlight,
             fontSize: 13,
+            cursor: 'pointer',
           }}
         >
           Close room

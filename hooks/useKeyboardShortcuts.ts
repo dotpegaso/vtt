@@ -7,6 +7,7 @@ type ShortcutHandlers = {
   onSelect: VoidFunction;
   onRollD20: VoidFunction;
   onToggleHistory: VoidFunction;
+  onToggleDiceMenu: VoidFunction;
   diceDisabled: boolean;
 };
 
@@ -15,6 +16,7 @@ export function useKeyboardShortcuts({
   onSelect,
   onRollD20,
   onToggleHistory,
+  onToggleDiceMenu,
   diceDisabled,
 }: ShortcutHandlers) {
   useEffect(() => {
@@ -27,6 +29,9 @@ export function useKeyboardShortcuts({
       switch (e.key.toLowerCase()) {
         case "d":
           onDraw();
+          break;
+        case "r":
+          onToggleDiceMenu();
           break;
         case "v":
           onSelect();

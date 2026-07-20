@@ -150,7 +150,7 @@ export function BottomToolbar({
               <circle cx="8.5" cy="8.5" r="1.5" />
               <path d="M21 15l-5-5L5 21" />
             </ToolbarIcon>
-            <ToolbarIcon onClick={() => setMoreOpen(true)} label="More" bare>
+            <ToolbarIcon onClick={() => setMoreOpen((v) => !v)} label="More" bare>
               <circle cx="5" cy="12" r="1.5" fill={theme.text} />
               <circle cx="12" cy="12" r="1.5" fill={theme.text} />
               <circle cx="19" cy="12" r="1.5" fill={theme.text} />
@@ -161,7 +161,7 @@ export function BottomToolbar({
 
       <MoreMenu
         isOpen={moreOpen}
-        onCloseAction={() => setMoreOpen(false)}
+        onCloseAction={() => setMoreOpen((v) => !v)}
         onOpenHistoryAction={onOpenHistoryAction}
         onCloseRoomAction={onCloseRoomAction}
       />
@@ -195,6 +195,7 @@ function ToolbarIcon({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        cursor: 'pointer',
       }}
     >
       <svg

@@ -38,7 +38,7 @@ export function PlayerList({ onlineParticipants, gmId, userId }: PlayerListProps
             />
             <span style={{ fontSize: 12, color: theme.container, fontWeight: isSelf ? 500 : 400 }}>
               {p.displayName}
-              {isGm ? ' (GM)' : ''}
+              {isGm ? ' (dungeon master)' : ''}
               {isSelf ? ' (you)' : ''}
             </span>
           </div>

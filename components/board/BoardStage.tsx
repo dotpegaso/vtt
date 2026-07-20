@@ -73,6 +73,7 @@ export function BoardStage({
     onSelect: () => setMode('select'),
     onRollD20: () => startRoll([{ sides: 20, count: 1 }]),
     onToggleHistory: () => setShowHistory((v) => !v),
+    onToggleDiceMenu: () => setDiceOpen((v) => !v),
     diceDisabled: !diceReady || !!activeRoll,
   })
 
@@ -232,7 +233,7 @@ export function BoardStage({
         onDiceToggleAction={() => setDiceOpen((v) => !v)}
         isGm={isGm}
         onUploadClickAction={() => document.getElementById('image-upload')?.click()}
-        onOpenHistoryAction={() => setShowHistory(true)}
+        onOpenHistoryAction={() => setShowHistory((v) => !v)}
         onCloseRoomAction={handleCloseRoom}
       />
 
