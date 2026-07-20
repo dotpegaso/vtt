@@ -5,11 +5,6 @@
 }
 
 .menu {
-  --more-menu-container: #061d3f;
-  --more-menu-divider: #2a4a72;
-  --more-menu-highlight: #f7cb9c;
-  --more-menu-text: #e8e8e8;
-
   position: fixed;
   bottom: 76px;
   left: 50%;
@@ -19,9 +14,9 @@
   flex-direction: column;
   gap: 10px;
   padding: 12px 14px;
-  border: 1px solid var(--more-menu-highlight);
+  border: 1px solid var(--color-highlight);
   border-radius: 12px;
-  background: var(--more-menu-container);
+  background: var(--color-surface);
   transform: translateX(-50%);
 }
 
@@ -31,22 +26,22 @@
   padding: 10px 14px;
   border: none;
   background: none;
-  color: var(--more-menu-text);
+  color: var(--color-text);
   font-size: 13px;
   text-align: left;
   cursor: pointer;
 }
 
 .menuButtonDanger {
-  color: var(--more-menu-highlight);
+  color: var(--color-highlight);
 }
 
 .menuButton:focus-visible {
-  outline: 2px solid var(--more-menu-highlight);
+  outline: 2px solid var(--color-highlight);
   outline-offset: 2px;
 }
 
 .divider {
   height: 1px;
-  background: var(--more-menu-divider);
+  background: var(--color-divider);
 }

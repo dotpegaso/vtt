@@ -1,8 +1,4 @@
 .playerList {
-  --player-list-container: #061d3f;
-  --player-list-highlight: #f7cb9c;
-  --player-list-online: #4ade80;
-
   position: fixed;
   top: 16px;
   left: 16px;
@@ -11,7 +7,7 @@
 
 .heading {
   margin-bottom: 6px;
-  color: var(--player-list-container);
+  color: var(--color-surface);
   font-size: 11px;
   font-weight: 500;
   opacity: 0.55;
@@ -29,15 +25,15 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--player-list-online);
+  background: var(--color-online);
 }
 
 .statusDotGm {
-  background: var(--player-list-highlight);
+  background: var(--color-highlight);
 }
 
 .playerName {
-  color: var(--player-list-container);
+  color: var(--color-surface);
   font-size: 12px;
   font-weight: 400;
 }

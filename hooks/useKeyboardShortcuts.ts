@@ -48,5 +48,5 @@ export function useKeyboardShortcuts({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onDraw, onSelect, onRollD20, onToggleHistory, diceDisabled]);
+  }, [onDraw, onSelect, onRollD20, onToggleHistory, onToggleDiceMenu, diceDisabled]);
 }

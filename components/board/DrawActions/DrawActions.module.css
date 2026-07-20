@@ -1,7 +1,4 @@
 .actions {
-  --draw-actions-container: #061d3f;
-  --draw-actions-highlight: #f7cb9c;
-
   position: fixed;
   top: 16px;
   right: 16px;
@@ -18,13 +15,13 @@
   justify-content: center;
   border: none;
   border-radius: 8px;
-  background: var(--draw-actions-container);
-  color: var(--draw-actions-highlight);
+  background: var(--color-surface);
+  color: var(--color-highlight);
   cursor: pointer;
 }
 
 .actionButton:focus-visible {
-  outline: 2px solid var(--draw-actions-highlight);
+  outline: 2px solid var(--color-highlight);
   outline-offset: 2px;
 }
 
