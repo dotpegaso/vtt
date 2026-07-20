@@ -1,0 +1,111 @@
+.panel {
+  --dice-panel-container: #061d3f;
+  --dice-panel-container-light: #0a2a56;
+  --dice-panel-divider: #2a4a72;
+  --dice-panel-highlight: #f7cb9c;
+  --dice-panel-text: #e8e8e8;
+
+  position: fixed;
+  bottom: 76px;
+  left: 50%;
+  z-index: 150;
+  display: flex;
+  min-width: 220px;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--dice-panel-highlight);
+  border-radius: 12px;
+  background: var(--dice-panel-container);
+  transform: translateX(-50%);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepButton {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dice-panel-container-light);
+  color: var(--dice-panel-text);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.stepButton:disabled,
+.dieButton:disabled,
+.rollButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.count {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--dice-panel-container-light);
+  color: var(--dice-panel-highlight);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.divider {
+  width: 1px;
+  height: 22px;
+  margin: 0 4px;
+  background: var(--dice-panel-divider);
+}
+
+.diceOptions {
+  display: flex;
+  gap: 5px;
+}
+
+.dieButton {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dice-panel-container-light);
+  color: var(--dice-panel-text);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.dieButtonSelected {
+  background: var(--dice-panel-highlight);
+  color: var(--dice-panel-container);
+  font-weight: 500;
+}
+
+.rollButton {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dice-panel-highlight);
+  color: var(--dice-panel-container);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pointer {
+  position: fixed;
+  bottom: 64px;
+  left: 50%;
+  z-index: 150;
+  width: 1px;
+  height: 12px;
+  background: var(--dice-panel-highlight);
+  opacity: 0.6;
+  transform: translateX(-50%);
+}

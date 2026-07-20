@@ -1,0 +1,1 @@
+export { DiceTray } from './DiceTray'

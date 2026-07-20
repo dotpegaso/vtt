@@ -1,0 +1,86 @@
+.toolbar {
+  --bottom-toolbar-container: #061d3f;
+  --bottom-toolbar-container-light: #0a2a56;
+  --bottom-toolbar-divider: #2a4a72;
+  --bottom-toolbar-highlight: #f7cb9c;
+  --bottom-toolbar-text: #e8e8e8;
+
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: var(--bottom-toolbar-container);
+  transform: translateX(-50%);
+}
+
+.toggleGroup {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--bottom-toolbar-container-light);
+}
+
+.iconButton {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--bottom-toolbar-text);
+  cursor: pointer;
+}
+
+.iconButtonActive {
+  background: var(--bottom-toolbar-highlight);
+  color: var(--bottom-toolbar-container);
+}
+
+.iconButton:disabled,
+.diceButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.iconButton:focus-visible,
+.diceButton:focus-visible {
+  outline: 2px solid var(--bottom-toolbar-highlight);
+  outline-offset: 2px;
+}
+
+.diceButton {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--bottom-toolbar-text);
+  cursor: pointer;
+}
+
+.diceButtonOpen {
+  background: var(--bottom-toolbar-highlight);
+  color: var(--bottom-toolbar-container);
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+  background: var(--bottom-toolbar-divider);
+}
+
+.icon {
+  color: inherit;
+}

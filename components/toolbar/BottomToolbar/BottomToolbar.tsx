@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { theme } from "@/lib/theme";
-import { MoreMenu } from "./MoreMenu";
+import { MoreMenu } from "../MoreMenu";
+import styles from "./BottomToolbar.module.css";
 
 type BottomToolbarProps = {
   mode: "select" | "draw";
@@ -31,31 +31,9 @@ export function BottomToolbar({
 
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          bottom: 14,
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 150,
-          background: theme.container,
-          borderRadius: 14,
-          padding: "8px 10px",
-          display: "flex",
-          alignItems: "center",
-          gap: 4,
-        }}
-      >
+      <div className={styles.toolbar}>
         {/* Select / draw toggle */}
-        <div
-          style={{
-            display: "flex",
-            background: theme.containerLight,
-            borderRadius: 10,
-            padding: 3,
-            gap: 2,
-          }}
-        >
+        <div className={styles.toggleGroup}>
           <ToolbarIcon
             active={mode === "select"}
             onClick={() => onModeChangeAction("select")}
@@ -81,66 +59,29 @@ export function BottomToolbar({
           onClick={onDiceToggleAction}
           disabled={diceDisabled}
           aria-label="Dice"
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 8,
-            background: diceOpen ? theme.highlight : "transparent",
-            border: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: diceDisabled ? 0.4 : 1,
-            cursor: diceDisabled ? "not-allowed" : "pointer",
-          }}
+          className={diceOpen ? `${styles.diceButton} ${styles.diceButtonOpen}` : styles.diceButton}
         >
           <svg
             width="17"
             height="17"
             viewBox="0 0 24 24"
             fill="none"
-            stroke={diceOpen ? theme.container : theme.text}
+            stroke="currentColor"
             strokeWidth="2"
+            className={styles.icon}
           >
             <circle cx="12" cy="12" r="9" />
-            <circle
-              cx="9"
-              cy="9"
-              r="1"
-              fill={diceOpen ? theme.container : theme.text}
-            />
-            <circle
-              cx="15"
-              cy="9"
-              r="1"
-              fill={diceOpen ? theme.container : theme.text}
-            />
-            <circle
-              cx="9"
-              cy="15"
-              r="1"
-              fill={diceOpen ? theme.container : theme.text}
-            />
-            <circle
-              cx="15"
-              cy="15"
-              r="1"
-              fill={diceOpen ? theme.container : theme.text}
-            />
+            <circle cx="9" cy="9" r="1" fill="currentColor" />
+            <circle cx="15" cy="9" r="1" fill="currentColor" />
+            <circle cx="9" cy="15" r="1" fill="currentColor" />
+            <circle cx="15" cy="15" r="1" fill="currentColor" />
           </svg>
         </button>
 
         {/* GM-only section */}
         {isGm && (
           <>
-            <div
-              style={{
-                width: 1,
-                height: 24,
-                background: theme.divider,
-                margin: "0 4px",
-              }}
-            />
+            <div className={styles.divider} />
             <ToolbarIcon
               onClick={onUploadClickAction}
               label="Upload image"
@@ -151,9 +92,9 @@ export function BottomToolbar({
               <path d="M21 15l-5-5L5 21" />
             </ToolbarIcon>
             <ToolbarIcon onClick={() => setMoreOpen((v) => !v)} label="More" bare>
-              <circle cx="5" cy="12" r="1.5" fill={theme.text} />
-              <circle cx="12" cy="12" r="1.5" fill={theme.text} />
-              <circle cx="19" cy="12" r="1.5" fill={theme.text} />
+              <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+              <circle cx="19" cy="12" r="1.5" fill="currentColor" />
             </ToolbarIcon>
           </>
         )}
@@ -186,25 +127,16 @@ function ToolbarIcon({
     <button
       onClick={onClick}
       aria-label={label}
-      style={{
-        width: 34,
-        height: 34,
-        borderRadius: 8,
-        background: active ? theme.highlight : "transparent",
-        border: "none",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: 'pointer',
-      }}
+      className={active ? `${styles.iconButton} ${styles.iconButtonActive}` : styles.iconButton}
     >
       <svg
         width="17"
         height="17"
         viewBox="0 0 24 24"
         fill={bare ? "none" : "none"}
-        stroke={active ? theme.container : theme.text}
+        stroke="currentColor"
         strokeWidth="2"
+        className={styles.icon}
       >
         {children}
       </svg>

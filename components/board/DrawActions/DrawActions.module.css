@@ -1,0 +1,33 @@
+.actions {
+  --draw-actions-container: #061d3f;
+  --draw-actions-highlight: #f7cb9c;
+
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+}
+
+.actionButton {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: var(--draw-actions-container);
+  color: var(--draw-actions-highlight);
+  cursor: pointer;
+}
+
+.actionButton:focus-visible {
+  outline: 2px solid var(--draw-actions-highlight);
+  outline-offset: 2px;
+}
+
+.icon {
+  color: inherit;
+}

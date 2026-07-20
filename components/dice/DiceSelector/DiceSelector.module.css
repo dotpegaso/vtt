@@ -1,0 +1,99 @@
+.selector {
+  --dice-selector-surface: #ffffff;
+  --dice-selector-surface-active: #111111;
+  --dice-selector-border: #333333;
+  --dice-selector-control: #f0f0f0;
+  --dice-selector-control-active: #333333;
+  --dice-selector-text: #111111;
+  --dice-selector-text-active: #ffffff;
+  --dice-selector-roll-disabled: #999999;
+  --dice-selector-roll-enabled: #000000;
+
+  position: fixed;
+  right: 0;
+  bottom: 80px;
+  left: 0;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+}
+
+.diceGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dieCard {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--dice-selector-border);
+  border-radius: 8px;
+  background: var(--dice-selector-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.dieCardActive {
+  background: var(--dice-selector-surface-active);
+}
+
+.adjustButton {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--dice-selector-border);
+  border-radius: 4px;
+  background: var(--dice-selector-control);
+  color: var(--dice-selector-text);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.adjustButtonActive {
+  background: var(--dice-selector-control-active);
+  color: var(--dice-selector-text-active);
+}
+
+.adjustButton:disabled,
+.rollButton:disabled {
+  cursor: not-allowed;
+}
+
+.adjustButton:focus-visible,
+.rollButton:focus-visible {
+  outline: 2px solid var(--dice-selector-border);
+  outline-offset: 2px;
+}
+
+.label {
+  min-width: 48px;
+  color: var(--dice-selector-text);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.labelActive {
+  color: var(--dice-selector-text-active);
+}
+
+.rollButton {
+  padding: 10px 32px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dice-selector-roll-disabled);
+  color: var(--dice-selector-text-active);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
+.rollButtonEnabled {
+  background: var(--dice-selector-roll-enabled);
+  cursor: pointer;
+}

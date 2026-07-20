@@ -1,0 +1,90 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 240;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.drawer {
+  --history-drawer-container: #061d3f;
+  --history-drawer-container-light: #0a2a56;
+  --history-drawer-divider: #2a4a72;
+  --history-drawer-highlight: #f7cb9c;
+  --history-drawer-text: #e8e8e8;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 250;
+  display: flex;
+  width: 280px;
+  flex-direction: column;
+  background: var(--history-drawer-container);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border-bottom: 1px solid var(--history-drawer-divider);
+}
+
+.title {
+  color: var(--history-drawer-text);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.closeButton {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: var(--history-drawer-container-light);
+  color: var(--history-drawer-text);
+  cursor: pointer;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--history-drawer-highlight);
+  outline-offset: 2px;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.emptyState {
+  color: var(--history-drawer-divider);
+  font-size: 13px;
+}
+
+.rollItem {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--history-drawer-divider);
+}
+
+.rollerName {
+  color: var(--history-drawer-highlight);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rollText {
+  margin-top: 2px;
+  color: var(--history-drawer-text);
+  font-size: 13px;
+}
+
+.timestamp {
+  margin-top: 2px;
+  color: var(--history-drawer-divider);
+  font-size: 11px;
+}

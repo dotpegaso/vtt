@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { DiceRoll } from "@/hooks/useDiceRoll";
+import styles from "./DiceTray.module.css";
 
 type DiceBoxInstance = {
   initialize: () => Promise<void>;
@@ -131,19 +132,8 @@ export function DiceTray({
   ]);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0)",
-        zIndex: 100,
-        display: "flex",
-        flexDirection: "column",
-        opacity: isVisible ? 1 : 0,
-        pointerEvents: isVisible ? "auto" : "none",
-      }}
-    >
-      <div id="dice-box-container" style={{ flex: 1 }} />
+    <div className={isVisible ? `${styles.tray} ${styles.visible}` : `${styles.tray} ${styles.hidden}`}>
+      <div id="dice-box-container" className={styles.container} />
     </div>
   );
 }
