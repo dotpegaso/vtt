@@ -4,4 +4,4 @@
 -- evaluated, since the filtered column isn't present in the stripped-down
 -- default payload — the event silently never reaches subscribed clients.
 alter table strokes replica identity full;
-alter table images replica identity full;
+-- alter table images replica identity full;
