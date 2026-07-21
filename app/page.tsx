@@ -11,7 +11,7 @@ export default function Home() {
       <form action={createRoom}>
         <button
           type="submit"
-          className="rounded-lg bg-black px-6 py-3 text-white font-medium"
+          className="rounded-lg bg-black px-6 py-3 text-white font-medium cursor-pointer"
         >
           Create Room
         </button>
