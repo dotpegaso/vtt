@@ -7,7 +7,7 @@
   min-width: 220px;
   flex-direction: column;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 12px 12px;
   border: 1px solid var(--color-highlight);
   border-radius: 12px;
   background: var(--color-surface);
@@ -17,7 +17,7 @@
 .controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .stepButton {
@@ -54,7 +54,7 @@
 .divider {
   width: 1px;
   height: 22px;
-  margin: 0 4px;
+  margin: 0 2px;
   background: var(--color-divider);
 }
 

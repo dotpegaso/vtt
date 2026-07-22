@@ -62,19 +62,21 @@ export function BottomToolbar({
           className={diceOpen ? `${styles.diceButton} ${styles.diceButtonOpen}` : styles.diceButton}
         >
           <svg
-            width="17"
-            height="17"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className={styles.icon}
+            aria-hidden="true"
           >
-            <circle cx="12" cy="12" r="9" />
-            <circle cx="9" cy="9" r="1" fill="currentColor" />
-            <circle cx="15" cy="9" r="1" fill="currentColor" />
-            <circle cx="9" cy="15" r="1" fill="currentColor" />
-            <circle cx="15" cy="15" r="1" fill="currentColor" />
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+            <circle cx="8" cy="9" r="1.25" fill="currentColor" stroke="none" />
+            <circle cx="12" cy="12" r="1.25" fill="currentColor" stroke="none" />
+            <circle cx="16" cy="15" r="1.25" fill="currentColor" stroke="none" />
           </svg>
         </button>
 
