@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { BoardStage } from "@/components/board/BoardStage";
+import FullScreenMessage from "@/components/board/FullscreenMessage";
 
 type JoinState =
   | { status: "checking" }
@@ -113,13 +114,5 @@ export function RoomClient({ slug }: { slug: string }) {
       userId={state.userId}
       displayName={state.displayName}
     />
-  );
-}
-
-function FullScreenMessage({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="flex min-h-screen items-center justify-center p-6 text-center text-neutral-500">
-      {children}
-    </main>
   );
 }

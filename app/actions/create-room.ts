@@ -1,4 +1,3 @@
-// path: vtt/app/actions/create-room.ts
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
