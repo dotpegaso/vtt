@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { DiceRoll } from "@/hooks/useDiceRoll";
+import { registerPlotDieType, PLOT_DIE_TYPE } from "@/lib/dice/plotDie";
 import styles from "./DiceTray.module.css";
 
 type DiceBoxInstance = {
@@ -53,6 +54,7 @@ export function DiceTray({
     async function initDiceBox() {
       try {
         const mod = await import("@3d-dice/dice-box-threejs");
+
         const DiceBox = mod.default as new (
           selector: string,
           options: Record<string, unknown>,
@@ -72,6 +74,7 @@ export function DiceTray({
         });
 
         await box.initialize();
+        await registerPlotDieType(box);
 
         diceBoxRef.current = box;
         setIsReady(true);
@@ -86,10 +89,9 @@ export function DiceTray({
   }, []);
 
   const buildSingleGroupNotation = useCallback(
-    (
-      result: DiceRoll["results"] extends (infer U)[] | null ? U : never,
-    ): string => {
-      return `${result.count}d${result.sides}@${result.values.join(",")}`;
+    (result: DiceRoll["results"] extends (infer U)[] | null ? U : never): string => {
+      const typeToken = result.sides === "plot" ? PLOT_DIE_TYPE : `d${result.sides}`;
+      return `${result.count}${typeToken}@${result.values.join(",")}`;
     },
     [],
   );

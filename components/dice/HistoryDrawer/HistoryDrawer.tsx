@@ -6,8 +6,8 @@ import styles from './HistoryDrawer.module.css'
 
 type HistoryRoll = {
   id: string
-  config: { sides: number; count: number }[]
-  results: { sides: number; count: number; values: number[] }[] | null
+  config: { sides: number | 'plot'; count: number }[]
+  results: { sides: number | 'plot'; count: number; values: number[] }[] | null
   roller_id: string
   created_at: string
 }
@@ -21,6 +21,18 @@ type HistoryDrawerProps = {
   roomId: string
   isOpen: boolean
   onCloseAction: VoidFunction
+}
+
+function describePlotValue(v: number): string {
+  switch (v) {
+    case 1: return 'Opportunity (+2)'
+    case 2: return 'Opportunity (+4)'
+    case 3:
+    case 4: return '—'
+    case 5:
+    case 6: return 'Heroic'
+    default: return String(v)
+  }
 }
 
 export function HistoryDrawer({ roomId, isOpen, onCloseAction }: HistoryDrawerProps) {
@@ -64,7 +76,11 @@ export function HistoryDrawer({ roomId, isOpen, onCloseAction }: HistoryDrawerPr
   function formatRoll(roll: HistoryRoll): string {
     if (!roll.results) return '—'
     return roll.results
-      .map((r) => `${r.count}d${r.sides}: [${r.values.join(', ')}]`)
+      .map((r) =>
+        r.sides === 'plot'
+          ? `Plot Die: [${r.values.map(describePlotValue).join(', ')}]`
+          : `${r.count}d${r.sides}: [${r.values.join(', ')}]`
+      )
       .join(' + ')
   }
 

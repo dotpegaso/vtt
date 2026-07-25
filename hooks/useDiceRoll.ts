@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-export type DiceConfig = { sides: number; count: number }
+export type DiceConfig = { sides: number | 'plot'; count: number }
 export type DiceRollResult = {
-  sides: number
+  sides: number | 'plot'
   count: number
   values: number[]
 }

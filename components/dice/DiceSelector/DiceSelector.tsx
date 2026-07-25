@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import type { DiceConfig } from '@/hooks/useDiceRoll'
 import styles from './DiceSelector.module.css'
-
-const DIE_TYPES = [4, 6, 8, 10, 12, 20, 100]
+import { DIE_TYPES, dieLabel } from '../DicePanel/DicePanel'
 
 type DiceSelectorProps = {
   disabled: boolean
@@ -12,22 +11,25 @@ type DiceSelectorProps = {
 }
 
 export function DiceSelector({ disabled, onRollAction }: DiceSelectorProps) {
-  const [counts, setCounts] = useState<Record<number, number>>({})
+  const [counts, setCounts] = useState<Record<string, number>>({})
 
-  function adjustCount(sides: number, delta: number) {
+  function adjustCount(sides: number | 'plot', delta: number) {
     setCounts((prev) => {
-      const next = Math.max(0, (prev[sides] ?? 0) + delta)
-      return { ...prev, [sides]: next }
+      const key = String(sides)
+      const next = Math.max(0, (prev[key] ?? 0) + delta)
+      return { ...prev, [key]: next }
     })
   }
 
   function handleRoll() {
     const config: DiceConfig[] = Object.entries(counts)
       .filter(([, count]) => count > 0)
-      .map(([sides, count]) => ({ sides: Number(sides), count }))
+      .map(([key, count]) => ({
+        sides: key === 'plot' ? 'plot' : Number(key),
+        count,
+      }))
 
     if (config.length === 0) return
-
     onRollAction(config)
     setCounts({})
   }
@@ -38,7 +40,7 @@ export function DiceSelector({ disabled, onRollAction }: DiceSelectorProps) {
     <div className={styles.selector}>
       <div className={styles.diceGrid}>
         {DIE_TYPES.map((sides) => {
-          const count = counts[sides] ?? 0
+          const count = counts[String(sides)] ?? 0
           const isActive = count > 0
 
           return (
@@ -51,7 +53,7 @@ export function DiceSelector({ disabled, onRollAction }: DiceSelectorProps) {
                 −
               </button>
               <span className={isActive ? `${styles.label} ${styles.labelActive}` : styles.label}>
-                d{sides} × {count}
+                {dieLabel(sides)} × {count}
               </span>
               <button
                 disabled={disabled}

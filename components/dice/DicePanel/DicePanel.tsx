@@ -4,17 +4,21 @@ import { useState } from 'react'
 import type { DiceConfig } from '@/hooks/useDiceRoll'
 import styles from './DicePanel.module.css'
 
-const DIE_TYPES = [4, 6, 8, 10, 12, 20, 100]
-
 type DicePanelProps = {
   isOpen: boolean
   disabled: boolean
   onRollAction: (config: DiceConfig[]) => void
 }
 
+export const DIE_TYPES: (number | 'plot')[] = [4, 6, 8, 10, 12, 20, 100, 'plot']
+
+export function dieLabel(sides: number | 'plot') {
+  return sides === 'plot' ? 'Plot' : `d${sides}`
+}
+
 export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
   const [count, setCount] = useState(1)
-  const [selectedDie, setSelectedDie] = useState(20)
+  const [selectedDie, setSelectedDie] = useState<number | 'plot'>(20)
 
   if (!isOpen) return null
 
@@ -58,7 +62,7 @@ export function DicePanel({ isOpen, disabled, onRollAction }: DicePanelProps) {
                   onClick={() => setSelectedDie(sides)}
                   className={isSelected ? `${styles.dieButton} ${styles.dieButtonSelected}` : styles.dieButton}
                 >
-                  d{sides}
+                  {dieLabel(sides)}
                 </button>
               )
             })}
