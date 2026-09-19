@@ -1,19 +1,20 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createRoom } from '@/app/actions/create-room'
-import FullScreenMessage from '@/components/board/FullscreenMessage'
+import { useTransition } from "react";
+import { createRoom } from "@/app/actions/create-room";
+import FullScreenMessage from "@/components/board/FullscreenMessage";
 
 export default function Home() {
-  const [status, setStatus] = useState('idle')
+  const [isPending, startTransition] = useTransition();
 
-  async function handleSubmit() {
-    setStatus('loading')
-    await createRoom()
+  function handleSubmit() {
+    startTransition(async () => {
+      await createRoom();
+    });
   }
 
-  if (status === 'loading') {
-    return <FullScreenMessage>Creating room…</FullScreenMessage>
+  if (isPending) {
+    return <FullScreenMessage>Creating room…</FullScreenMessage>;
   }
 
   return (
@@ -31,5 +32,5 @@ export default function Home() {
         </button>
       </form>
     </main>
-  )
+  );
 }
