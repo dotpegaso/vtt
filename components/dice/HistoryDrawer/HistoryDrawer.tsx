@@ -79,7 +79,7 @@ export function HistoryDrawer({ roomId, isOpen, onCloseAction }: HistoryDrawerPr
       .map((r) =>
         r.sides === 'plot'
           ? `Plot Die: [${r.values.map(describePlotValue).join(', ')}]`
-          : `${r.count}d${r.sides}: [${r.values.join(', ')}]`
+          : `${r.count}d${r.sides}, result = ${r.values.join(', ')}`
       )
       .join(' + ')
   }
@@ -95,7 +95,7 @@ export function HistoryDrawer({ roomId, isOpen, onCloseAction }: HistoryDrawerPr
       <div className={styles.overlay} onClick={onCloseAction} />
       <div className={styles.drawer}>
         <div className={styles.header}>
-          <strong className={styles.title}>Roll history</strong>
+          <strong className={styles.title}>Roll History</strong>
           <button onClick={onCloseAction} aria-label="Close history" className={styles.closeButton}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />

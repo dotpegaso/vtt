@@ -10,7 +10,7 @@ type DicePanelProps = {
   onRollAction: (config: DiceConfig[]) => void
 }
 
-export const DIE_TYPES: (number | 'plot')[] = [4, 6, 8, 10, 12, 20, 100, 'plot']
+export const DIE_TYPES: (number | 'plot')[] = [4, 6, 8, 10, 12, 20, 100] //'plot']
 
 export function dieLabel(sides: number | 'plot') {
   return sides === 'plot' ? 'Plot' : `d${sides}`
