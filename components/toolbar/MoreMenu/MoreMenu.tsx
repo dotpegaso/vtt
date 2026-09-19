@@ -12,6 +12,11 @@ type MoreMenuProps = {
 export function MoreMenu({ isOpen, onCloseAction, onOpenHistoryAction, onCloseRoomAction }: MoreMenuProps) {
   if (!isOpen) return null
 
+  function handleClose() {
+    onCloseRoomAction();
+    onCloseAction();
+  }
+
   return (
     <>
       <div onClick={onCloseAction} className={styles.backdrop} />
@@ -27,10 +32,7 @@ export function MoreMenu({ isOpen, onCloseAction, onOpenHistoryAction, onCloseRo
         </button>
         <div className={styles.divider} />
         <button
-          onClick={() => {
-            onCloseRoomAction()
-            onCloseAction()
-          }}
+          onClick={handleClose}
           className={`${styles.menuButton} ${styles.menuButtonDanger}`}
         >
           Close room

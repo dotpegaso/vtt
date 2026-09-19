@@ -8,14 +8,14 @@ import FullScreenMessage from "@/components/board/FullscreenMessage";
 type JoinState =
   | { status: "checking" }
   | { status: "needs_name" }
+  | { status: "error"; message: string }
   | {
       status: "joined";
       roomId: string;
       participantId: string;
       userId: string;
       displayName: string;
-    }
-  | { status: "error"; message: string };
+    };
 
 export function RoomClient({ slug }: { slug: string }) {
   const [state, setState] = useState<JoinState>({ status: "checking" });
@@ -97,7 +97,7 @@ export function RoomClient({ slug }: { slug: string }) {
           />
           <button
             type="submit"
-            className="rounded-lg bg-black px-6 py-3 text-white font-medium"
+            className="rounded-lg bg-black px-6 py-3 text-white font-medium cursor-pointer"
           >
             Join
           </button>

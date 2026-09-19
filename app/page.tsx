@@ -7,9 +7,9 @@ import FullScreenMessage from '@/components/board/FullscreenMessage'
 export default function Home() {
   const [status, setStatus] = useState('idle')
 
-  function handleSubmit() {
+  async function handleSubmit() {
     setStatus('loading')
-    createRoom()
+    await createRoom()
   }
 
   if (status === 'loading') {

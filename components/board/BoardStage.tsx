@@ -22,6 +22,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { createClient } from "@/lib/supabase/client";
 
 import type Konva from "konva";
+import { redirect } from "next/navigation";
 
 type BoardStageProps = {
   roomId: string;
@@ -85,6 +86,23 @@ export function BoardStage({
     window.addEventListener("resize", updateSize);
     return () => window.removeEventListener("resize", updateSize);
   }, []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase.channel(roomId).on(
+      'postgres_changes',
+      {event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},
+      (payload) => {
+        if (payload.new.closed) {
+          redirect('/')
+        }
+      }
+    ).subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    }
+  }, [roomId])
 
   function handleWheel(e: Konva.KonvaEventObject<WheelEvent>) {
     e.evt.preventDefault();
@@ -185,6 +203,7 @@ export function BoardStage({
   async function handleCloseRoom() {
     const supabase = createClient();
     await supabase.from("rooms").update({ closed: true }).eq("id", roomId);
+    redirect('/')
   }
 
   return (
